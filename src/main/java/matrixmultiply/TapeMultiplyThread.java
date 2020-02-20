@@ -1,17 +1,20 @@
 package matrixmultiply;
 
-public class TapeMultiplyThread implements Runnable {
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+public class TapeMultiplyThread extends Thread {
     private int i;
     private int j;
     private int[] row;
     private int[] column;
     private int[][] resultMatrix;
 
-    TapeMultiplyThread(int i, int j, int[] row, int[] column, int[][] resultMatrix) {
+    TapeMultiplyThread (int i, int[] row, int[][] resultMatrix) {
         this.i = i;
-        this.j = j;
         this.row = row;
-        this.column = column;
         this.resultMatrix = resultMatrix;
     }
 

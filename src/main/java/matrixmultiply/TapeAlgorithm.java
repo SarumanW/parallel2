@@ -3,38 +3,40 @@ package matrixmultiply;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
 
 public class TapeAlgorithm implements MultiplicationAlgorithm {
-    private static final int
-            POOL_SIZE = Runtime.getRuntime().availableProcessors();
-
-    private final ExecutorService exec = Executors.newFixedThreadPool(POOL_SIZE);
 
     @Override
     public void multiplyMatrix(int[][] firstMatrix, int[][] secondMatrix, int[][] resultMatrix) {
         int rowsCount = firstMatrix.length;
-        List<FutureTask> tasks = new ArrayList<>();
+
+        List<TapeMultiplyThread> threads = new ArrayList<>();
 
         for (int i = 0; i < rowsCount; i++) {
-            int columnIndex = i;
-            for (int j = 0; j < rowsCount; j++) {
+            int[] row = firstMatrix[i];
 
-                int[] column = getColumn(secondMatrix, columnIndex);
+            TapeMultiplyThread thread = new TapeMultiplyThread(i, row, resultMatrix);
+            threads.add(thread);
+        }
 
-                TapeMultiplyThread tapeMultiplyThread = new TapeMultiplyThread(j, columnIndex,
-                        firstMatrix[j], column, resultMatrix);
-                exec.execute(tapeMultiplyThread);
+        for (int i = 0; i < rowsCount; i++) {
+            int[] column = getColumn(secondMatrix, i);
 
-                if (++columnIndex == rowsCount) {
-                    columnIndex = 0;
+            for (TapeMultiplyThread thread : threads) {
+                thread.setColumn(column);
+                thread.setJ(i);
+
+                thread.run();
+            }
+
+            for (TapeMultiplyThread thread : threads) {
+                try {
+                    thread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }
-
-        exec.shutdown();
     }
 
     private int[] getColumn(int[][] matrix, int column) {
