@@ -1,16 +1,18 @@
 package matrixmultiply;
 
-public class MultiplyThread implements Runnable {
+public class TapeMultiplyThread implements Runnable {
     private int i;
     private int j;
     private int[] row;
     private int[] column;
+    private int[][] resultMatrix;
 
-    MultiplyThread(int i, int j, int[] row, int[] column) {
+    TapeMultiplyThread(int i, int j, int[] row, int[] column, int[][] resultMatrix) {
         this.i = i;
         this.j = j;
         this.row = row;
         this.column = column;
+        this.resultMatrix = resultMatrix;
     }
 
     @Override
@@ -21,6 +23,6 @@ public class MultiplyThread implements Runnable {
             result += row[i] * column[i];
         }
 
-        //Test.result[i][j] = result;
+        resultMatrix[i][j] = result;
     }
 }
