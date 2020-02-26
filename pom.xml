@@ -20,6 +20,13 @@
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>sonatype-nexus-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+    </repositories>
+
 
     <dependencies>
         <dependency>
@@ -29,5 +36,10 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.googlecode.cliche</groupId>
+            <artifactId>cliche</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>
