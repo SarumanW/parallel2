@@ -7,20 +7,20 @@ import java.io.IOException;
 import java.util.List;
 
 public class StudentsTest {
-    private FileUtil fileUtil;
+    private StudentController studentController;
 
     private StudentsTest() {
-        fileUtil = new FileUtil();
+        studentController = new StudentController();
     }
 
     @Command
     public List showStudents() {
-        return fileUtil.getListOfStudents();
+        return studentController.showStudents();
     }
 
     @Command
     public String setMark(String student, String mark) {
-        fileUtil.setMark(student, mark);
+        studentController.setMark(student, mark);
         return "Mark was set";
     }
 
