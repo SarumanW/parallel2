@@ -1,4 +1,6 @@
-package matrixmultiply;
+package matrixmultiply.tape;
+
+import matrixmultiply.MultiplicationAlgorithm;
 
 import java.util.ArrayList;
 import java.util.Arrays;

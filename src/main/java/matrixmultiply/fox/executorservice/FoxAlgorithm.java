@@ -1,4 +1,6 @@
-package matrixmultiply;
+package matrixmultiply.fox.executorservice;
+
+import matrixmultiply.MultiplicationAlgorithm;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

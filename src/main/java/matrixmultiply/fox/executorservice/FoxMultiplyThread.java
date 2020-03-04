@@ -1,4 +1,4 @@
-package matrixmultiply;
+package matrixmultiply.fox.executorservice;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.FutureTask;

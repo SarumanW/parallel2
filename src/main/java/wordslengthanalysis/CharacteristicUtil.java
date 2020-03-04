@@ -43,7 +43,7 @@ class CharacteristicUtil {
                 .collect(groupingBy(Function.identity(), Collectors.counting()));
 
         final double[] res = {0};
-        valuesCount.forEach((k, v) -> res[0] += (Math.sqrt(k - average) * v.intValue() / values.size()));
+        valuesCount.forEach((k, v) -> res[0] += (Math.pow(k - average, 2) * v / values.size()));
 
         return res[0];
     }
