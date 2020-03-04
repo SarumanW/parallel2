@@ -1,4 +1,4 @@
-package wordslengthanalysis;
+package textanalysis.wordslength;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,9 +9,9 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
 
-class CharacteristicUtil {
+public class CharacteristicUtil {
 
-    static int getExpectedValue(Map<String, Integer> map) {
+    public static int getExpectedValue(Map<String, Integer> map) {
         List<Integer> values = new ArrayList<>();
 
         for (Map.Entry<String, Integer> entry : map.entrySet()) {
@@ -27,7 +27,7 @@ class CharacteristicUtil {
         return res.get();
     }
 
-    static double getDispersion(Map<String, Integer> map) {
+    public static double getDispersion(Map<String, Integer> map) {
         List<Integer> values = new ArrayList<>();
 
         for (Map.Entry<String, Integer> entry : map.entrySet()) {

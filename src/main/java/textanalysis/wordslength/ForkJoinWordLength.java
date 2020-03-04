@@ -1,4 +1,4 @@
-package wordslengthanalysis;
+package textanalysis.wordslength;
 
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
@@ -8,14 +8,14 @@ import java.util.stream.Collector;
 
 public class ForkJoinWordLength extends RecursiveTask<Map<String, Integer>> {
     private List<String> lines;
-    private static final int THRESHOLD = 200;
+    private static final int THRESHOLD = 100;
 
     private ForkJoinWordLength(List<String> lines) {
         this.lines = lines;
     }
 
 
-    static Map<String, Integer> wordsCount(List<String> lines) {
+    public static Map<String, Integer> wordsCount(List<String> lines) {
         ForkJoinPool pool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
 
         return pool.submit(new ForkJoinWordLength(lines)).join();
