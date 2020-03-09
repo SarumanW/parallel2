@@ -14,8 +14,8 @@ public class Test {
         MultiplicationAlgorithm foxAlgorithm = new FoxAlgorithm();
         MultiplicationAlgorithm foxForkJoinAlgorithm = new FoxForkJoinAlgorithm();
 
-        testAlgorithmExecution(tapeAlgorithm);
-        testAlgorithmExecution(foxAlgorithm);
+        //testAlgorithmExecution(tapeAlgorithm);
+        //testAlgorithmExecution(foxAlgorithm);
         testAlgorithmExecution(foxForkJoinAlgorithm);
     }
 
