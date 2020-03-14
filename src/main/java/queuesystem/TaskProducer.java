@@ -2,9 +2,10 @@ package queuesystem;
 
 import java.util.concurrent.BlockingQueue;
 
-public class TaskProducer implements Runnable {
+public class TaskProducer extends Thread {
     private BlockingQueue<String> tasksQueue;
     private BlockingQueue<String> declinedTasksQueue;
+    private int generalTasksNumber = 0;
 
     TaskProducer(BlockingQueue<String> blockingQueue, BlockingQueue<String> declinedTasksQueue) {
         this.tasksQueue = blockingQueue;
@@ -13,24 +14,23 @@ public class TaskProducer implements Runnable {
 
     @Override
     public void run() {
-        int i = 0;
         try {
-            while (true) {
-                String task = "task" + i;
+            while (!isInterrupted()) {
+                String task = "task" + ++generalTasksNumber;
 
-                System.out.println("Produce task " + task);
                 if (!this.tasksQueue.offer(task)) {
-                    System.out.println("Task " + task + " is out of queue");
                     declinedTasksQueue.offer(task);
                 }
-                i++;
 
-
-                Thread.sleep(500); //make random
+                Thread.sleep(300);
 
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
+    }
+
+    int getGeneralTasksNumber() {
+        return generalTasksNumber;
     }
 }

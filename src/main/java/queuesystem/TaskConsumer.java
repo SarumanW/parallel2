@@ -1,10 +1,10 @@
 package queuesystem;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ThreadLocalRandom;
 
-public class TaskConsumer implements Runnable {
+public class TaskConsumer extends Thread {
     private BlockingQueue<String> tasksQueue;
-    private boolean isBusy = false;
 
     TaskConsumer(BlockingQueue<String> blockingQueue) {
         this.tasksQueue = blockingQueue;
@@ -13,22 +13,13 @@ public class TaskConsumer implements Runnable {
     @Override
     public void run() {
         try {
-            while (true) {
+            while (!isInterrupted()) {
                 String task = tasksQueue.take();
-                System.out.println(task + " is taken by " + Thread.currentThread().getName());
-                isBusy = true;
-                Thread.sleep(5000); //make random
-
-                System.out.println(task + " is released by " + Thread.currentThread().getName());
-                isBusy = false;
+                Thread.sleep(ThreadLocalRandom.current().nextInt(3000, 5000 + 1));
 
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
-    }
-
-    public boolean isBusy() {
-        return isBusy;
     }
 }
