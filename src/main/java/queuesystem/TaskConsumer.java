@@ -15,6 +15,7 @@ public class TaskConsumer extends Thread {
         try {
             while (!isInterrupted()) {
                 String task = tasksQueue.take();
+                System.out.println("Process task: " + task);
                 Thread.sleep(ThreadLocalRandom.current().nextInt(3000, 5000 + 1));
 
             }

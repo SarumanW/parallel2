@@ -18,7 +18,7 @@ public class QueueSizeTester extends Thread {
             while (!isInterrupted()) {
                 queueSizes.add(tasksQueue.size());
 
-                Thread.sleep(200);
+                Thread.sleep(500);
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

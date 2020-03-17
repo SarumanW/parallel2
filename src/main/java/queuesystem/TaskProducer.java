@@ -22,7 +22,8 @@ public class TaskProducer extends Thread {
                     declinedTasksQueue.offer(task);
                 }
 
-                Thread.sleep(300);
+                System.out.println("Put task: " + task);
+                Thread.sleep(600);
 
             }
         } catch (InterruptedException e) {
