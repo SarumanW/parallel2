@@ -47,7 +47,7 @@ class SystemTest {
             exec.submit(taskConsumer);
         }
         exec.submit(queueSizeTester);
-        exec.submit(logger);
+        //exec.submit(logger);
 
         Thread.sleep(100000);
         exec.shutdownNow();
