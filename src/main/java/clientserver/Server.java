@@ -3,12 +3,13 @@ package clientserver;
 import matrixmultiply.MultiplicationAlgorithm;
 import matrixmultiply.fox.forkjoin.FoxForkJoinAlgorithm;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import static clientserver.Settings.MATRIX_SIZE;
-import static clientserver.Settings.SERVER_SIDE_MULTIPLY_COMMAND;
+import static clientserver.Settings.*;
 import static matrixmultiply.MultiplicationUtils.generateRandomMatrix;
 
 public class Server {
@@ -21,33 +22,18 @@ public class Server {
 
             System.out.print("Connection accepted.");
 
-
             ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
-            System.out.println("DataOutputStream  created");
-
             ObjectInputStream in = new ObjectInputStream(client.getInputStream());
-            System.out.println("DataInputStream created");
 
             while (!client.isClosed()) {
 
                 System.out.println("Server reading from channel");
 
-
                 String entry = (String) in.readObject();
 
-                System.out.println("READ from client message - " + entry);
-
-                System.out.println("Server try writing to channel");
-
-                if (entry.equalsIgnoreCase("quit")) {
-                    System.out.println("Client initialize connections suicide ...");
-                    out.writeUTF("Server reply - " + entry + " - OK");
-                    out.flush();
-                    break;
-                }
-
                 if (entry.equals(SERVER_SIDE_MULTIPLY_COMMAND)) {
-                    System.out.println("server-side matrix multiply starts");
+
+                    System.out.println("Server-side matrix multiply starts");
 
                     int[][] result = new int[MATRIX_SIZE][MATRIX_SIZE];
                     int[][] first = generateRandomMatrix(MATRIX_SIZE, MATRIX_SIZE);
@@ -56,31 +42,33 @@ public class Server {
                     MultiplicationAlgorithm foxForkJoinAlgorithm = new FoxForkJoinAlgorithm();
                     foxForkJoinAlgorithm.multiplyMatrix(first, second, result);
 
-                    System.out.println("server-side matrix multiply is finished");
+                    System.out.println("Server-side matrix multiply is finished");
 
                     out.writeObject(result);
-
-                    System.out.println("Server Wrote message to client.");
                 }
 
-//                out.writeObject("Server reply - " + entry + " - OK");
-//                System.out.println("Server Wrote message to client.");
+                if (entry.equals(CLIENT_SIDE_MULTIPLY_COMMAND)) {
+                    System.out.println("Client-side matrix multiply starts");
+
+                    int[][] result = new int[MATRIX_SIZE][MATRIX_SIZE];
+
+                    int[][] first = (int[][]) in.readObject();
+                    int[][] second = (int[][]) in.readObject();
+
+                    MultiplicationAlgorithm foxForkJoinAlgorithm = new FoxForkJoinAlgorithm();
+                    foxForkJoinAlgorithm.multiplyMatrix(first, second, result);
+
+                    System.out.println("Client-side matrix multiply is finished");
+
+                    out.writeObject(result);
+                }
 
                 out.flush();
-
             }
-
-
-            System.out.println("Client disconnected");
-            System.out.println("Closing connections & channels.");
-
-
             in.close();
             out.close();
 
             client.close();
-
-            System.out.println("Closing connections & channels - DONE.");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }

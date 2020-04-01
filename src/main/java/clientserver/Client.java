@@ -3,6 +3,9 @@ package clientserver;
 import java.io.*;
 import java.net.Socket;
 
+import static clientserver.Settings.*;
+import static matrixmultiply.MultiplicationUtils.generateRandomMatrix;
+
 public class Client {
     public static void main(String[] args) {
 
@@ -14,42 +17,56 @@ public class Client {
 
             System.out.println("Client connected to socket.");
             System.out.println();
-            System.out.println("Client writing channel = oos & reading channel = ois initialized.");
 
             while (!socket.isOutputShutdown()) {
 
                 if (br.ready()) {
 
-                    System.out.println("Client start writing in channel...");
                     String clientCommand = br.readLine();
 
-                    oos.writeObject(clientCommand);
-                    oos.flush();
-                    System.out.println("Client sent message " + clientCommand + " to server.");
+                    if (clientCommand.equals(SERVER_SIDE_MULTIPLY_COMMAND)) {
+                        long startTime = System.nanoTime();
 
-                    if (clientCommand.equalsIgnoreCase("quit")) {
-                        System.out.println("Client kill connections");
-                        System.out.println("reading...");
-                        String in = (String) ois.readObject();
-                        System.out.println(in);
-                        break;
+                        oos.writeObject(clientCommand);
+                        oos.flush();
+
+                        getResultAndTest(startTime, ois);
                     }
 
-                    System.out.println("Client sent message & start waiting for data from server...");
+                    if (clientCommand.equals(CLIENT_SIDE_MULTIPLY_COMMAND)) {
+                        long startTime = System.nanoTime();
 
-                    System.out.println("reading...");
-                    int[][] in = (int[][]) ois.readObject();
-                    //MultiplicationUtils.printMatrix(in);
+                        oos.writeObject(clientCommand);
+                        oos.flush();
 
-                    System.out.println(in.length);
+                        int[][] first = generateRandomMatrix(MATRIX_SIZE, MATRIX_SIZE);
+                        int[][] second = generateRandomMatrix(MATRIX_SIZE, MATRIX_SIZE);
 
+                        oos.writeObject(first);
+                        oos.flush();
+
+                        oos.writeObject(second);
+                        oos.flush();
+
+                        getResultAndTest(startTime, ois);
+                    }
                 }
             }
-
-            System.out.println("Closing connections & channels on clentSide - DONE.");
 
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void getResultAndTest(long startTime, ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
+        System.out.println("reading...");
+        int[][] in = (int[][]) objectInputStream.readObject();
+        //MultiplicationUtils.printMatrix(in);
+
+        long endTime = System.nanoTime();
+        System.out.println(in.length);
+
+        long duration = (endTime - startTime) / 1000000;
+        System.out.println(duration);
     }
 }
